@@ -18,6 +18,9 @@ https://github.com/VISHALGUPTA100803/Ostello/assets/96491059/1a5bd9bf-9596-4261-
 Build android apk
 
 
+https://github.com/VISHALGUPTA100803/Ostello/releases
+
+
 
 
 
