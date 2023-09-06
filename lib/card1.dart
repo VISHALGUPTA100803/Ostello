@@ -8,8 +8,8 @@ class Card1 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.only(top: 16.0),
-      width: 338,
+      margin: EdgeInsets.all(16),
+      width: double.infinity,
       height: 175,
       decoration: ShapeDecoration(
         color: Color(0xFFF6EFFE),
@@ -47,8 +47,17 @@ class Card1 extends StatelessWidget {
                         borderRadius: BorderRadius.circular(10),
                       ),
                     ),
-                    child: Image.asset('assets/images/coaching.jpeg'),
+                    child: Stack(
+                      
+                      children: [
+                        Image.asset('assets/images/coaching.jpeg',fit: BoxFit.cover,),
+                        SvgPicture.asset(
+                            'assets/images/Rectangle 19736 (1).svg'),
+                      ],
+                    ),
                   ),
+                  
+
                   Positioned(
                     bottom: 10,
                     left: 30,

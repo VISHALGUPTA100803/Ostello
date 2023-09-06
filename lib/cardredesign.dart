@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
-
 import 'card1.dart';
 import 'card2.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class CardRedesign extends StatefulWidget {
   const CardRedesign({super.key});
@@ -14,14 +14,10 @@ class CardRedesign extends StatefulWidget {
 class _CardRedesignState extends State<CardRedesign> {
   String? selectedSortOption = 'Relevance'; // To track the selected option
 
-  void showSortOptions(BuildContext context, Offset position) async {
-    final RenderBox overlay =
-        Overlay.of(context).context.findRenderObject() as RenderBox;
-
+  void showSortOptions(BuildContext context, RelativeRect position) async {
     final result = await showMenu<String>(
       context: context,
-      position: RelativeRect.fromLTRB(position.dx, position.dy,
-          overlay.size.width - position.dx, overlay.size.height - position.dy),
+      position: position, // Use the updated position here
       items: [
         _buildPopupMenuItem("Relevance"),
         _buildPopupMenuItem("Distance"),
@@ -65,11 +61,17 @@ class _CardRedesignState extends State<CardRedesign> {
       backgroundColor: Colors.white,
       appBar: AppBar(
         backgroundColor: Colors.white,
-        leading: const CircleAvatar(
-          backgroundColor: Colors.purple,
-          child: Icon(
-            Icons.chevron_left,
-            color: Colors.white,
+        leading: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Stack(
+            alignment: Alignment.center,
+            children: [
+              SvgPicture.asset(
+                'assets/images/Ellipse 496.svg',
+              ),
+              //
+              Icon(Icons.chevron_left),
+            ],
           ),
         ),
         title: const Text(
@@ -106,8 +108,8 @@ class _CardRedesignState extends State<CardRedesign> {
                   filled: true,
                   fillColor: Colors.white,
                   hintText: 'Search for UPSC Coaching',
-                  contentPadding:
-                    const  EdgeInsets.symmetric(horizontal: 16.0, vertical: 10.0),
+                  contentPadding: const EdgeInsets.symmetric(
+                      horizontal: 16.0, vertical: 10.0),
                   enabledBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(8.0),
                     borderSide: const BorderSide(
@@ -184,7 +186,7 @@ class _CardRedesignState extends State<CardRedesign> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                     const Text(
+                      const Text(
                         'Sort',
                         style: TextStyle(
                           color: Color(0xFF7D23E0),
@@ -195,14 +197,38 @@ class _CardRedesignState extends State<CardRedesign> {
                           letterSpacing: 0.14,
                         ),
                       ),
-                     const SizedBox(
+                      const SizedBox(
                         width: 28,
                       ),
                       InkWell(
                         onTap: () {
-                          final RenderBox renderBox =
+                          final RenderBox button =
                               context.findRenderObject() as RenderBox;
-                          final position = renderBox.localToGlobal(Offset.zero);
+                          final RenderBox overlay = Overlay.of(context)
+                              .context
+                              .findRenderObject() as RenderBox;
+
+                          final Offset buttonTopRight = button.localToGlobal(
+                              Offset(button.size.width, 0),
+                              ancestor: overlay);
+                          final double menuHeight = 4 *
+                              48.0; // Assuming each menu item has a height of 48.0
+                          final double offsetFromTop =
+                              24.0; // Adjust this value to move the menu slightly above the down arrow
+
+                          final RelativeRect position = RelativeRect.fromLTRB(
+                            buttonTopRight.dx -
+                                button.size
+                                    .width, // Starts from the beginning of the "Sort" button
+                            buttonTopRight.dy -
+                                offsetFromTop, // Adjust the top offset
+                            overlay.size.width - buttonTopRight.dx,
+                            overlay.size.height -
+                                (buttonTopRight.dy -
+                                    menuHeight +
+                                    offsetFromTop),
+                          );
+
                           showSortOptions(context, position);
                         },
                         child: const Icon(
@@ -214,7 +240,7 @@ class _CardRedesignState extends State<CardRedesign> {
                     ],
                   ),
                 ),
-               const SizedBox(
+                const SizedBox(
                   width: 16,
                 ),
                 Container(
@@ -242,7 +268,7 @@ class _CardRedesignState extends State<CardRedesign> {
                     ),
                   ),
                 ),
-               const SizedBox(
+                const SizedBox(
                   width: 16,
                 ),
                 Container(
@@ -251,7 +277,8 @@ class _CardRedesignState extends State<CardRedesign> {
                   height: 29,
                   decoration: ShapeDecoration(
                     shape: RoundedRectangleBorder(
-                      side: const BorderSide(width: 0.50, color: Color(0xFF7D23E0)),
+                      side: const BorderSide(
+                          width: 0.50, color: Color(0xFF7D23E0)),
                       borderRadius: BorderRadius.circular(18),
                     ),
                   ),
@@ -271,13 +298,12 @@ class _CardRedesignState extends State<CardRedesign> {
                 ),
               ],
             ),
-           const SizedBox(
+            const SizedBox(
               height: 5,
             ),
             const Card1(),
             const Card2(),
             const Card1(),
-            
             const Card2(),
             SizedBox(
               height: 6,
